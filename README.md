@@ -50,7 +50,7 @@ Commits organizados en formato convencional:
 ```
 
 #### 📝 Más Información
-👉 **Ver [README.md completo](https://github.com/eatechristianrielcondoriqu-dot/Grupo2-Ing-Sof/blob/main/identify.ai/README.md)** con:
+👉 **Ver [README.md completo](https://github.com/eatechristianarielcondoriqu-dot/Grupo2-Ing-Sof/blob/main/identify.ai/README.md)** con:
 - Instrucciones de instalación local
 - Pasos de despliegue en Vercel
 - Detalles de cada sección
