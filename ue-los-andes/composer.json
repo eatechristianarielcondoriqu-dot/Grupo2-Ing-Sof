@@ -1,0 +1,8 @@
+{
+  "name": "ue-los-andes/portal-estudiantes",
+  "description": "Portal de acceso - Unidad Educativa Los Andes",
+  "type": "project",
+  "require": {
+    "php": "^8.1"
+  }
+}
