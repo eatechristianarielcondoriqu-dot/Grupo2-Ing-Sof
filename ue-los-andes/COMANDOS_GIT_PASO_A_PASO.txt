@@ -1,0 +1,106 @@
+═══════════════════════════════════════════════════════════════════════
+  GUÍA RÁPIDA: SUBIR PROYECTO A GITHUB
+═══════════════════════════════════════════════════════════════════════
+
+📝 PASO 1: CREAR REPOSITORIO EN GITHUB
+───────────────────────────────────────────────────────────────────────
+
+1. Entra a github.com (debes estar logueado)
+2. Haz clic en el + (arriba a la derecha) → "New repository"
+3. Llena los campos así:
+   
+   Repository name:    ue-los-andes
+   Description:        Portal Estudiantil - Unidad Educativa Los Andes
+   Visibility:         PUBLIC (marca esta opción)
+   
+4. Haz clic en "Create repository"
+
+Verás una página que dice: "Quick setup"
+
+═══════════════════════════════════════════════════════════════════════
+
+📝 PASO 2: COPIAR ESTOS COMANDOS EN TU TERMINAL
+───────────────────────────────────────────────────────────────────────
+
+⚠️  IMPORTANTE: 
+    Reemplaza TU_USUARIO con tu nombre de usuario de GitHub
+    Ej: si tu usuario es "juanperez", escribe:
+    https://github.com/juanperez/ue-los-andes.git
+
+ABRE TERMINAL EN LA CARPETA DEL PROYECTO Y EJECUTA:
+
+    git init
+
+    git add .
+
+    git commit -m "Inicial: Portal Estudiantil Los Andes"
+
+    git branch -M main
+
+    git remote add origin https://github.com/TU_USUARIO/ue-los-andes.git
+
+    git push -u origin main
+
+
+═══════════════════════════════════════════════════════════════════════
+
+✅ VERIFICACIÓN
+───────────────────────────────────────────────────────────────────────
+
+Si todo salió bien:
+✓ Tu código estará en GitHub
+✓ Verás https://github.com/TU_USUARIO/ue-los-andes en tu navegador
+✓ Podrás hacer clic en "Code" y ver todos tus archivos
+
+
+═══════════════════════════════════════════════════════════════════════
+
+🚀 AHORA SÍ: DESPLEGAR EN VERCEL
+───────────────────────────────────────────────────────────────────────
+
+1. Ve a vercel.com
+2. Haz clic en "Add New Project"
+3. Busca "ue-los-andes"
+4. Haz clic en "Import"
+5. En "Environment Variables" agrega:
+
+   DATABASE_URL = [tu connection string de Neon]
+   APP_SECRET = [ejecuta: openssl rand -hex 32]
+
+6. Haz clic en "Deploy"
+7. ¡LISTO! Tu app estará en Vercel
+
+
+═══════════════════════════════════════════════════════════════════════
+
+💡 COMANDOS ÚTILES FUTUROS
+───────────────────────────────────────────────────────────────────────
+
+Ver estado del repositorio:
+    git status
+
+Ver historial de commits:
+    git log
+
+Hacer un nuevo commit (si modificas archivos):
+    git add .
+    git commit -m "tipo(componente): descripción"
+    git push
+
+
+═══════════════════════════════════════════════════════════════════════
+
+❓ PROBLEMAS COMUNES
+───────────────────────────────────────────────────────────────────────
+
+"fatal: Not a git repository"
+→ Asegúrate de estar en la carpeta correcta (ue-los-andes)
+
+"Permission denied"
+→ Probablemente necesites configurar SSH en GitHub
+
+"error: src refspec main does not match any"
+→ Ejecuta: git branch -M main
+
+
+═══════════════════════════════════════════════════════════════════════
