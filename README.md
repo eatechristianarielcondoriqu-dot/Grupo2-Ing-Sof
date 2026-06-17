@@ -66,7 +66,7 @@ Commits organizados en formato convencional:
 Portal estudiantil profesional para la Unidad Educativa Los Andes. Aplicación web con autenticación segura, panel administrativo y gestión de estudiantes. Backend PHP con PostgreSQL, desplegado como serverless en Vercel.
 
 #### 🔗 Enlaces del Proyecto
-- **Repositorio GitHub:** [`ue-los-andes`](https://github.com/TU_USUARIO/ue-los-andes)
+- **Repositorio GitHub:** [`ue-los-andes`](https://github.com/eatechristianarielcondoriqu-dot/Grupo2-Ing-Sof/tree/main/ue-los-andes)
 - **Sitio en Vivo:** [ue-los-andess.vercel.app](https://ue-los-andess.vercel.app/)
 
 #### ✨ Funcionalidades Principales
