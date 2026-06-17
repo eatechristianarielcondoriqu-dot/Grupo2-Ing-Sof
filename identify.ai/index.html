@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IDENTIFY AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #401d4d;
+  --bg2: #151f3b;
+  --bg3: #1e2435;
+  --border: #2a3148;
+  --text: #F1F5F9;
+  --text2: #94A3B8;
+  --text3: #64748B;
+  --blue: #3B82F6;
+  --blue-d: #1d3a7a;
+  --purple: #7C3AED;
+  --green: #10B981;
+  --red: #EF4444;
+  --yellow: #F59E0B;
+  --radius: 12px;
+  --font: 'DM Sans', sans-serif;
+  --mono: 'Space Mono', monospace;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 15px; }
+.hidden { display: none !important; }
+
+/* ---- SPLASH ---- */
+.splash {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; transition: opacity .5s;
+}
+.splash-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(59,130,246,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59,130,246,.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.splash-content {
+  position: relative; text-align: center; z-index: 1;
+  animation: fadeUp .6s ease;
+}
+.splash-logo { margin-bottom: 20px; }
+.splash-logo svg { filter: drop-shadow(0 0 28px rgba(59,130,246,.5)); }
+.splash-title {
+  font-family: var(--mono); font-size: 42px; font-weight: 700;
+  background: linear-gradient(135deg, #fff 40%, #3B82F6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+.splash-sub { color: var(--text2); font-size: 15px; margin-bottom: 24px; line-height: 1.6; }
+.splash-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+.chip {
+  background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.25);
+  color: var(--blue); padding: 5px 14px; border-radius: 100px; font-size: 12px;
+  font-family: var(--mono);
+}
+.splash-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+.splash-btn {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none; color: #fff; padding: 13px 28px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font);
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 20px rgba(59,130,246,.3);
+}
+.splash-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(59,130,246,.4); }
+.splash-btn-outline {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text2); padding: 13px 28px; border-radius: var(--radius);
+  font-size: 14px; cursor: pointer; font-family: var(--font);
+  transition: border-color .15s, color .15s;
+}
+.splash-btn-outline:hover { border-color: var(--blue); color: var(--text); }
+.splash-footer { margin-top: 18px; font-size: 12px; color: var(--text3); font-family: var(--mono); }
+
+/* ---- REGISTER SCREEN ---- */
+.reg-screen {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999; overflow-y: auto; padding: 24px;
+}
+.reg-screen .splash-grid {
+  position: fixed;
+}
+.reg-card {
+  position: relative; z-index: 1;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 40px; width: 100%; max-width: 440px;
+  animation: fadeUp .5s ease;
+  box-shadow: 0 24px 60px rgba(0,0,0,.4);
+}
+.reg-back {
+  position: absolute; top: 18px; left: 18px;
+  background: none; border: none; color: var(--text3); cursor: pointer;
+  font-size: 13px; font-family: var(--font); display: flex; align-items: center; gap: 6px;
+  transition: color .15s;
+}
+.reg-back:hover { color: var(--text); }
+.reg-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+.reg-logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #1E40AF, #7C3AED); display: flex; align-items: center; justify-content: center; }
+.reg-logo-name { font-family: var(--mono); font-size: 15px; font-weight: 700; }
+.reg-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+.reg-sub { font-size: 13px; color: var(--text2); margin-bottom: 28px; line-height: 1.5; }
+
+.step-indicator { display: flex; align-items: center; gap: 0; margin-bottom: 28px; }
+.step-dot {
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-family: var(--mono); font-weight: 700; flex-shrink: 0;
+  transition: all .3s;
+}
+.step-dot.active { background: var(--blue); color: #fff; }
+.step-dot.done { background: var(--green); color: #fff; }
+.step-dot.idle { background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
+.step-line { flex: 1; height: 2px; background: var(--border); margin: 0 4px; transition: background .3s; }
+.step-line.done { background: var(--green); }
+
+.field-group { margin-bottom: 16px; }
+.field-label { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-family: var(--mono); display: block; margin-bottom: 7px; }
+.field-input {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-family: var(--font); font-size: 14px;
+  padding: 11px 14px; outline: none; transition: border-color .15s;
+}
+.field-input:focus { border-color: var(--blue); }
+.field-input.error { border-color: var(--red); }
+.field-input.valid { border-color: var(--green); }
+.field-hint { font-size: 11px; margin-top: 5px; color: var(--text3); }
+.field-hint.err { color: var(--red); }
+.field-hint.ok { color: var(--green); }
+
+.pw-wrap { position: relative; }
+.pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text3); cursor: pointer; font-size: 13px; }
+
+.pw-strength { margin-top: 6px; }
+.pw-bars { display: flex; gap: 4px; margin-bottom: 4px; }
+.pw-bar { height: 3px; flex: 1; border-radius: 2px; background: var(--bg3); transition: background .3s; }
+.pw-bar.s1 { background: var(--red); }
+.pw-bar.s2 { background: var(--yellow); }
+.pw-bar.s3 { background: var(--green); }
+.pw-label { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+
+.reg-rules { background: var(--bg3); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+.reg-rule { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.reg-rule:last-child { margin-bottom: 0; }
+.rule-ico { width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; background: var(--border); color: var(--text3); transition: all .25s; }
+.rule-ico.pass { background: rgba(16,185,129,.2); color: var(--green); }
+
+.reg-submit {
+  width: 100%; background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none; color: #fff; padding: 13px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font);
+  transition: opacity .15s, transform .1s;
+  margin-top: 4px;
+}
+.reg-submit:hover { opacity: .9; transform: translateY(-1px); }
+.reg-submit:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+.reg-login { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text2); }
+.reg-login a { color: var(--blue); text-decoration: none; cursor: pointer; }
+.reg-login a:hover { text-decoration: underline; }
+
+/* ---- CONFIRM EMAIL SCREEN ---- */
+.confirm-screen {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 998; padding: 24px;
+}
+.confirm-card {
+  position: relative; z-index: 1;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 40px; width: 100%; max-width: 440px;
+  text-align: center; animation: fadeUp .5s ease;
+  box-shadow: 0 24px 60px rgba(0,0,0,.4);
+}
+.confirm-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(59,130,246,.12); border: 2px solid rgba(59,130,246,.3);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 22px; font-size: 30px;
+}
+.confirm-title { font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+.confirm-sub { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 28px; }
+.confirm-email-box {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px; margin-bottom: 24px;
+  font-family: var(--mono); font-size: 13px; color: var(--blue);
+  word-break: break-all;
+}
+.confirm-steps { text-align: left; margin-bottom: 28px; }
+.confirm-step {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.confirm-step:last-child { border-bottom: none; }
+.cs-num {
+  width: 22px; height: 22px; border-radius: 50%; background: rgba(59,130,246,.15);
+  border: 1px solid rgba(59,130,246,.3); color: var(--blue);
+  font-size: 10px; font-family: var(--mono); font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.cs-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.cs-text strong { color: var(--text); font-weight: 500; }
+
+.confirm-demo-btn {
+  width: 100%; background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none; color: #fff; padding: 13px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font);
+  transition: opacity .15s; margin-bottom: 12px;
+}
+.confirm-demo-btn:hover { opacity: .9; }
+.confirm-resend { font-size: 12px; color: var(--text3); }
+.confirm-resend a { color: var(--blue); text-decoration: none; cursor: pointer; }
+.confirm-resend a:hover { text-decoration: underline; }
+
+/* ---- PERMISSION FLOW ---- */
+.perm-screen {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 997; padding: 24px;
+}
+.perm-card {
+  position: relative; z-index: 1;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 36px 40px; width: 100%; max-width: 440px;
+  text-align: center; animation: fadeUp .4s ease;
+  box-shadow: 0 24px 60px rgba(0,0,0,.4);
+}
+.perm-icon-wrap {
+  width: 80px; height: 80px; border-radius: 22px; margin: 0 auto 22px;
+  background: linear-gradient(135deg, rgba(59,130,246,.2), rgba(124,58,237,.2));
+  border: 1px solid rgba(59,130,246,.3);
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+}
+.perm-title { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+.perm-sub { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 24px; }
+.perm-why {
+  background: var(--bg3); border-radius: 10px; padding: 14px 16px;
+  margin-bottom: 24px; text-align: left;
+}
+.perm-why-title { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-family: var(--mono); margin-bottom: 10px; }
+.perm-why-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+.perm-why-item:last-child { margin-bottom: 0; }
+.perm-why-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 5px; }
+.perm-btn {
+  width: 100%; background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none; color: #fff; padding: 13px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font);
+  transition: opacity .15s; margin-bottom: 10px;
+}
+.perm-btn:hover { opacity: .9; }
+.perm-skip { font-size: 12px; color: var(--text3); cursor: pointer; transition: color .15s; background: none; border: none; font-family: var(--font); width: 100%; }
+.perm-skip:hover { color: var(--text2); }
+
+/* ---- ANDROID SETTINGS SIMULATION ---- */
+.android-screen {
+  position: fixed; inset: 0; background: #1a1a1a;
+  display: flex; flex-direction: column;
+  z-index: 996; animation: fadeIn .3s ease;
+}
+.android-statusbar {
+  background: #111; padding: 8px 16px 6px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px; color: #aaa; font-family: var(--mono); flex-shrink: 0;
+}
+.android-topbar {
+  background: #222; padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+  border-bottom: 1px solid #333; flex-shrink: 0;
+}
+.android-back-btn {
+  background: none; border: none; color: #fff; font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; padding: 4px;
+}
+.android-topbar-title { font-size: 17px; color: #fff; font-weight: 400; }
+.android-topbar-sub { font-size: 12px; color: #888; margin-top: 1px; }
+.android-list { flex: 1; overflow-y: auto; background: #1a1a1a; }
+.android-section-title { font-size: 12px; color: #4A9EFF; padding: 16px 16px 6px; text-transform: uppercase; letter-spacing: .05em; }
+.android-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-bottom: 1px solid #2a2a2a;
+  transition: background .15s;
+}
+.android-item:hover { background: #222; }
+.android-item-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.android-item-name { flex: 1; font-size: 14px; color: #eee; }
+.android-item-pkg { font-size: 11px; color: #666; margin-top: 2px; }
+.android-toggle {
+  width: 46px; height: 26px; border-radius: 13px; background: #444;
+  border: none; cursor: pointer; position: relative; transition: background .3s; flex-shrink: 0;
+}
+.android-toggle::after {
+  content: ''; position: absolute; width: 20px; height: 20px; border-radius: 50%;
+  background: #aaa; top: 3px; left: 3px; transition: all .3s;
+}
+.android-toggle.on { background: #4A9EFF; }
+.android-toggle.on::after { left: 23px; background: #fff; }
+.android-item.highlight { background: rgba(74,158,255,.08); }
+
+/* ---- ANDROID CONFIRM DIALOG ---- */
+.android-dialog-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1001; padding: 24px; animation: fadeIn .2s ease;
+}
+.android-dialog {
+  background: #2d2d2d; border-radius: 16px; padding: 24px;
+  width: 100%; max-width: 320px;
+}
+.android-dialog-title { font-size: 16px; color: #fff; font-weight: 500; margin-bottom: 10px; }
+.android-dialog-body { font-size: 13px; color: #aaa; line-height: 1.6; margin-bottom: 20px; }
+.android-dialog-actions { display: flex; gap: 10px; justify-content: flex-end; }
+.android-dialog-btn {
+  padding: 9px 20px; border-radius: 8px; border: none;
+  font-size: 14px; cursor: pointer; font-family: var(--font); font-weight: 500;
+}
+.android-dialog-btn.cancel { background: transparent; color: #888; }
+.android-dialog-btn.cancel:hover { color: #aaa; }
+.android-dialog-btn.allow { background: #4A9EFF; color: #fff; }
+.android-dialog-btn.allow:hover { background: #3a8ef0; }
+
+/* ---- PERMISSION SUCCESS ---- */
+.perm-success-card {
+  position: relative; z-index: 1;
+  background: var(--bg2); border: 1px solid var(--green);
+  border-radius: 16px; padding: 36px 40px; width: 100%; max-width: 440px;
+  text-align: center; animation: fadeUp .4s ease;
+  box-shadow: 0 0 40px rgba(16,185,129,.15), 0 24px 60px rgba(0,0,0,.4);
+}
+.perm-success-icon {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 22px;
+  background: rgba(16,185,129,.15); border: 2px solid rgba(16,185,129,.4);
+  display: flex; align-items: center; justify-content: center; font-size: 36px;
+  animation: popIn .4s ease;
+}
+@keyframes popIn { from { transform: scale(.6); opacity:0; } to { transform: scale(1); opacity:1; } }
+.perm-success-title { font-size: 21px; font-weight: 600; color: var(--green); margin-bottom: 8px; }
+.perm-success-sub { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 24px; }
+.perm-active-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3);
+  border-radius: 100px; padding: 6px 16px; font-size: 12px; color: var(--green);
+  font-family: var(--mono); margin-bottom: 24px;
+}
+.perm-active-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+/* ---- APP LAYOUT ---- */
+.app { display: flex; height: 100vh; overflow: hidden; }
+.sidebar {
+  width: 220px; background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; flex-shrink: 0;
+}
+.sb-brand {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 16px; border-bottom: 1px solid var(--border);
+}
+.sb-name { font-weight: 600; font-size: 15px; flex: 1; }
+.sb-status {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+.sb-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px 12px; border-bottom: 1px solid var(--border);
+}
+.sb-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue-d), var(--blue));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.sb-user-info { flex: 1; min-width: 0; }
+.sb-user-name { font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-user-role { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+.sb-logout { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 12px; transition: color .15s; }
+.sb-logout:hover { color: var(--red); }
+.sb-nav { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+.nb {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 8px; border: none;
+  background: transparent; color: var(--text2); font-size: 13.5px;
+  cursor: pointer; font-family: var(--font); text-align: left; width: 100%;
+  transition: background .15s, color .15s;
+}
+.nb:hover { background: var(--bg3); color: var(--text); }
+.nb.active { background: rgba(59,130,246,.15); color: var(--blue); font-weight: 500; }
+.nb-badge {
+  margin-left: auto; background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 100px;
+}
+.sb-foot { padding: 12px 12px 16px; border-top: 1px solid var(--border); }
+.model-pill {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg3); border-radius: 8px; padding: 8px 10px;
+}
+.model-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 6px var(--green); flex-shrink: 0; }
+.model-name { font-size: 11px; font-weight: 500; }
+.model-acc { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+.main { flex: 1; overflow-y: auto; padding: 28px 32px; position: relative; }
+.panel { animation: fadeIn .25s ease; }
+.panel.hidden { display: none; }
+
+/* ---- TOAST ---- */
+.toast {
+  position: fixed; top: 20px; right: 20px; z-index: 999;
+  display: flex; align-items: center; gap: 12px;
+  background: #1a0505; border: 1px solid var(--red);
+  border-radius: var(--radius); padding: 12px 16px; max-width: 340px;
+  animation: slideIn .3s ease;
+}
+.toast-ico { font-size: 18px; color: var(--red); }
+.toast-t { font-size: 12px; font-weight: 600; color: var(--red); }
+.toast-m { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.toast button { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 14px; margin-left: 8px; }
+
+/* ---- PANEL HEADER ---- */
+.ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+.pt { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.pd { font-size: 13px; color: var(--text2); }
+.hbtn {
+  background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.25);
+  color: var(--blue); padding: 8px 16px; border-radius: 8px;
+  font-size: 13px; cursor: pointer; font-family: var(--font); transition: background .15s;
+}
+.hbtn:hover { background: rgba(59,130,246,.22); }
+
+/* ---- FILTERS ---- */
+.filters { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+.fb {
+  background: var(--bg2); border: 1px solid var(--border);
+  color: var(--text2); padding: 6px 14px; border-radius: 100px;
+  font-size: 12px; cursor: pointer; font-family: var(--font); transition: all .15s;
+}
+.fb:hover { border-color: var(--blue); color: var(--text); }
+.fb.active { background: rgba(59,130,246,.12); border-color: var(--blue); color: var(--blue); }
+.fb b { margin-left: 4px; }
+.red { color: var(--red); } .yellow { color: var(--yellow); } .green { color: var(--green); }
+
+/* ---- MESSAGES ---- */
+.msg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.msg-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px; cursor: pointer;
+  transition: border-color .15s, transform .1s;
+}
+.msg-card:hover { border-color: var(--blue); transform: translateY(-1px); }
+.mc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.mc-from { font-size: 13px; font-weight: 500; }
+.mc-time { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+.mc-preview { font-size: 12.5px; color: var(--text2); line-height: 1.5; margin-bottom: 10px; }
+.mc-footer { display: flex; align-items: center; justify-content: space-between; }
+.risk-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 100px; font-size: 11px;
+}
+.rp-alto { background: rgba(239,68,68,.12); color: #FCA5A5; border: 1px solid rgba(239,68,68,.25); }
+.rp-medio { background: rgba(245,158,11,.1); color: #FCD34D; border: 1px solid rgba(245,158,11,.2); }
+.rp-bajo { background: rgba(16,185,129,.1); color: #6EE7B7; border: 1px solid rgba(16,185,129,.2); }
+.rp-dot { width: 6px; height: 6px; border-radius: 50%; }
+.dot-alto { background: var(--red); box-shadow: 0 0 5px var(--red); }
+.dot-medio { background: var(--yellow); box-shadow: 0 0 5px var(--yellow); }
+.dot-bajo { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.mc-app { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+/* ---- DETAIL OVERLAY ---- */
+.detail-ov {
+  position: absolute; inset: 0; background: rgba(15,17,23,.85);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 20px; z-index: 10; overflow-y: auto;
+  backdrop-filter: blur(4px);
+}
+.detail-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px; width: 100%; max-width: 600px;
+  animation: fadeUp .2s ease;
+}
+.back {
+  background: none; border: none; color: var(--text2); cursor: pointer;
+  font-size: 13px; font-family: var(--font); margin-bottom: 20px;
+  display: block; transition: color .15s;
+}
+.back:hover { color: var(--text); }
+.detail-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
+.detail-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; flex-shrink: 0; }
+.d-from { font-size: 16px; font-weight: 600; margin-bottom: 3px; }
+.d-meta { font-size: 12px; color: var(--text3); }
+.d-risk-pill { margin-left: auto; }
+.d-msg-box { background: var(--bg3); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.d-msg-label { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-family: var(--mono); margin-bottom: 8px; }
+.d-msg-text { font-size: 13.5px; color: var(--text2); line-height: 1.65; font-style: italic; }
+.d-analysis { display: flex; flex-direction: column; gap: 18px; }
+.semaforo-block { display: flex; align-items: flex-start; gap: 16px; background: var(--bg3); border-radius: 10px; padding: 14px 16px; }
+.semaforo { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.sl { width: 18px; height: 18px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); transition: all .3s; }
+.sl.on[id="sl-rojo"],.sl.on[id^="sl-r"] { background: var(--red); box-shadow: 0 0 8px var(--red); border-color: var(--red); }
+.sl.on[id="sl-amarillo"] { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); border-color: var(--yellow); }
+.sl.on[id="sl-verde"] { background: var(--green); box-shadow: 0 0 8px var(--green); border-color: var(--green); }
+.d-risk-big { font-size: 18px; font-weight: 600; margin-bottom: 3px; }
+.d-score { font-size: 12px; color: var(--text3); font-family: var(--mono); margin-bottom: 4px; }
+.d-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.block-title { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-family: var(--mono); margin-bottom: 10px; }
+.inds-block,.kw-block { background: var(--bg3); border-radius: 10px; padding: 14px 16px; }
+.ind-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ind-row:last-child { margin-bottom: 0; }
+.ind-name { font-size: 12px; color: var(--text2); width: 180px; flex-shrink: 0; }
+.ind-bar-bg { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.ind-bar { height: 100%; border-radius: 3px; transition: width .5s; }
+.ib-danger { background: var(--red); }
+.ib-warn { background: var(--yellow); }
+.ib-ok { background: var(--green); }
+.ind-pct { font-size: 10px; font-family: var(--mono); color: var(--text3); width: 32px; text-align: right; }
+.kw-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.kw { padding: 3px 10px; border-radius: 6px; font-size: 11px; font-family: var(--mono); }
+.kw-danger { background: rgba(239,68,68,.12); color: #FCA5A5; border: 1px solid rgba(239,68,68,.2); }
+.kw-warn { background: rgba(245,158,11,.1); color: #FCD34D; border: 1px solid rgba(245,158,11,.2); }
+.kw-ok { background: rgba(16,185,129,.1); color: #6EE7B7; border: 1px solid rgba(16,185,129,.2); }
+.d-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.abtn { padding: 9px 18px; border-radius: 8px; border: none; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: opacity .15s; }
+.abtn:hover { opacity: .85; }
+.red-btn { background: rgba(239,68,68,.15); color: #FCA5A5; border: 1px solid rgba(239,68,68,.25); }
+.green-btn { background: rgba(16,185,129,.12); color: #6EE7B7; border: 1px solid rgba(16,185,129,.25); }
+.blue-btn { background: rgba(59,130,246,.12); color: #93C5FD; border: 1px solid rgba(59,130,246,.25); }
+
+/* ---- SCANNER ---- */
+.scanner-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:800px){.scanner-wrap{grid-template-columns:1fr;}}
+.scanner-left { display: flex; flex-direction: column; gap: 14px; }
+.scan-ta {
+  width: 100%; height: 160px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text); font-family: var(--font); font-size: 13px;
+  padding: 12px; resize: vertical; outline: none; line-height: 1.6; transition: border-color .15s;
+}
+.scan-ta:focus { border-color: var(--blue); }
+.scan-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.scan-sel { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font); font-size: 13px; padding: 8px 12px; outline: none; cursor: pointer; }
+.scan-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  border: none; color: #fff; padding: 11px; border-radius: var(--radius);
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font); transition: opacity .15s;
+}
+.scan-btn:hover { opacity: .9; }
+.examples-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ex-label { font-size: 11px; color: var(--text3); }
+.ex-btn { font-size: 11px; background: var(--bg3); border: 1px solid var(--border); color: var(--text2); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-family: var(--font); transition: background .15s; }
+.ex-btn:hover { background: var(--border); }
+.scanner-right { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.scan-res-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+.scan-res-header { margin-bottom: 16px; }
+.pipeline { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pipe-step { font-size: 10px; font-family: var(--mono); padding: 3px 8px; border-radius: 4px; background: var(--bg3); border: 1px solid var(--border); color: var(--text3); transition: all .3s; }
+.pipe-step.done { background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.25); color: var(--green); }
+.pipe-arr { font-size: 12px; color: var(--text3); }
+
+/* ---- STATS ---- */
+.stats-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+@media(max-width:700px){.stats-top{grid-template-columns:1fr 1fr;}}
+.sc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.sc.big { border-color: rgba(59,130,246,.25); }
+.sc-num { font-size: 36px; font-weight: 700; font-family: var(--mono); margin-bottom: 4px; }
+.sc-num.blue{color:var(--blue);} .sc-num.red{color:var(--red);} .sc-num.yellow{color:var(--yellow);} .sc-num.green{color:var(--green);}
+.sc-label { font-size: 12px; color: var(--text2); }
+.sc-trend { font-size: 11px; color: var(--green); font-family: var(--mono); margin-top: 6px; }
+.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.cc { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.cc.full { grid-column: 1/-1; }
+.cc-title { font-size: 13px; font-weight: 500; margin-bottom: 16px; color: var(--text2); }
+.mbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.mbar-name { font-size: 12px; color: var(--text2); width: 120px; flex-shrink: 0; }
+.mbar-bg { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.mbar { height: 100%; border-radius: 4px; transition: width .6s; }
+.mb-blue{background:var(--blue);} .mb-green{background:var(--green);} .mb-purple{background:var(--purple);} .mb-red{background:var(--red);}
+.mbar-val { font-size: 11px; font-family: var(--mono); color: var(--text3); width: 40px; text-align: right; }
+.weekly { display: flex; align-items: flex-end; gap: 8px; height: 100px; padding-top: 10px; }
+.wbar-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.wbar { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--blue), var(--purple)); transition: height .5s; min-height: 4px; }
+.wbar-label { font-size: 10px; color: var(--text3); font-family: var(--mono); }
+.tech-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.tech { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.tech small { font-size: 10px; color: var(--text3); }
+.tb { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-family: var(--mono); font-weight: 700; }
+.tb.py{background:rgba(59,130,246,.12);color:#93C5FD;} .tb.bert{background:rgba(124,58,237,.12);color:#C4B5FD;}
+.tb.tf{background:rgba(239,68,68,.12);color:#FCA5A5;} .tb.and{background:rgba(16,185,129,.12);color:#6EE7B7;}
+.tb.api{background:rgba(245,158,11,.1);color:#FCD34D;} .tb.pg{background:rgba(59,130,246,.1);color:#93C5FD;}
+.tb.git{background:rgba(100,116,139,.15);color:var(--text2);} .tb.sk{background:rgba(124,58,237,.1);color:#C4B5FD;}
+
+/* ---- ARCHITECTURE ---- */
+.arch-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:800px){.arch-wrap{grid-template-columns:1fr;}}
+.arch-modules { display: flex; flex-direction: column; gap: 10px; }
+.arch-mod {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px; cursor: pointer;
+  transition: border-color .15s, transform .1s;
+  border-left: 3px solid transparent;
+}
+.arch-mod:hover { transform: translateX(3px); border-color: var(--blue); }
+.arch-mod.selected { border-color: var(--blue); }
+.am-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.am-name { font-size: 13px; font-weight: 500; }
+.am-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.am-arrow { margin-left: auto; color: var(--text3); font-size: 14px; }
+.arch-connector { text-align: center; font-size: 18px; color: var(--text3); padding: 2px 0; font-family: var(--mono); }
+.arch-detail { background: var(--bg2); border: 1px solid var(--blue); border-radius: var(--radius); padding: 20px; align-self: start; animation: fadeIn .2s ease; }
+.ad-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+.ad-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.ad-title { font-size: 16px; font-weight: 600; margin-bottom: 3px; }
+.ad-sub { font-size: 12px; color: var(--text2); }
+.ad-close { margin-left: auto; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; }
+.ad-body { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 14px; }
+.ad-tech { display: flex; flex-wrap: wrap; gap: 6px; }
+.ad-tech-tag { font-size: 11px; font-family: var(--mono); padding: 3px 10px; border-radius: 100px; background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.2); color: #93C5FD; }
+
+/* ---- FIELD LABEL in app ---- */
+.field-label-app { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); font-family: var(--mono); display: block; margin-bottom: 6px; }
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes slideIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.5} }
+.loading-pulse { animation: pulse .8s ease-in-out infinite; }
+::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash" class="splash">
+  <div class="splash-grid"></div>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <rect width="72" height="72" rx="20" fill="#1E40AF"/>
+        <rect width="72" height="72" rx="20" fill="url(#lg)" opacity="0.7"/>
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="72" y2="72">
+            <stop offset="0%" stop-color="#3B82F6"/>
+            <stop offset="100%" stop-color="#7C3AED"/>
+          </linearGradient>
+        </defs>
+        <path d="M22 50 L36 22 L50 50 L43 43 L36 36 L29 43 Z" fill="white" opacity="0.95"/>
+        <circle cx="36" cy="53" r="4" fill="#10B981"/>
+      </svg>
+    </div>
+    <h1 class="splash-title">IDENTIFY AI</h1>
+    <p class="splash-sub">Detección inteligente de fraudes en mensajería instantánea</p>
+    <div class="splash-chips">
+      <span class="chip">NLP · BERT</span>
+      <span class="chip">Machine Learning</span>
+      <span class="chip">Android · TF Lite</span>
+    </div>
+    <div class="splash-btns">
+      <button class="splash-btn" onclick="showRegister()">Crear cuenta →</button>
+      <button class="splash-btn-outline" onclick="startAppDirect()">Iniciar simulación</button>
+    </div>
+    <div class="splash-footer">Proyecto Integrador Intermedio 1</div>
+  </div>
+</div>
+
+<!-- REGISTER SCREEN -->
+<div id="reg-screen" class="reg-screen hidden">
+  <div class="splash-grid"></div>
+  <div class="reg-card">
+    <button class="reg-back" onclick="backToSplash()">← Volver</button>
+
+    <div class="reg-logo">
+      <div class="reg-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 72 72" fill="none">
+          <path d="M22 50 L36 22 L50 50 L43 43 L36 36 L29 43 Z" fill="white" opacity="0.95"/>
+          <circle cx="36" cy="53" r="4" fill="#10B981"/>
+        </svg>
+      </div>
+      <span class="reg-logo-name">IDENTIFY AI</span>
+    </div>
+
+    <h2 class="reg-title">Crear cuenta</h2>
+    <p class="reg-sub">Protege tus comunicaciones con inteligencia artificial. El registro es gratuito.</p>
+
+    <!-- Step indicator -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="step1">1</div>
+      <div class="step-line" id="line1"></div>
+      <div class="step-dot idle" id="step2">2</div>
+      <div class="step-line" id="line2"></div>
+      <div class="step-dot idle" id="step3">3</div>
+    </div>
+
+    <!-- STEP 1: Nombre completo -->
+    <div id="reg-step1">
+      <div class="field-group">
+        <label class="field-label" for="reg-nombre">Nombre completo</label>
+        <input type="text" id="reg-nombre" class="field-input" placeholder="Ej: Ana Gabriela Mamani Quispe" oninput="validateNombre()" autocomplete="name"/>
+        <div class="field-hint" id="hint-nombre">Ingresa tu nombre y apellido(s)</div>
+      </div>
+      <button class="reg-submit" id="btn-step1" onclick="goStep2()" disabled>Continuar →</button>
+    </div>
+
+    <!-- STEP 2: Correo -->
+    <div id="reg-step2" class="hidden">
+      <div class="field-group">
+        <label class="field-label" for="reg-email">Correo electrónico</label>
+        <input type="email" id="reg-email" class="field-input" placeholder="tu@correo.com" oninput="validateEmail()" autocomplete="email"/>
+        <div class="field-hint" id="hint-email">Será tu nombre de usuario para iniciar sesión</div>
+      </div>
+      <button class="reg-submit" id="btn-step2" onclick="goStep3()" disabled>Continuar →</button>
+    </div>
+
+    <!-- STEP 3: Contraseña -->
+    <div id="reg-step3" class="hidden">
+      <div class="field-group">
+        <label class="field-label" for="reg-pass">Contraseña</label>
+        <div class="pw-wrap">
+          <input type="password" id="reg-pass" class="field-input" placeholder="Mín. 8 caracteres" oninput="validatePass()" autocomplete="new-password"/>
+          <button class="pw-toggle" onclick="togglePw('reg-pass',this)" type="button">👁</button>
+        </div>
+        <div class="pw-strength" id="pw-strength" style="display:none">
+          <div class="pw-bars">
+            <div class="pw-bar" id="pb1"></div>
+            <div class="pw-bar" id="pb2"></div>
+            <div class="pw-bar" id="pb3"></div>
+          </div>
+          <div class="pw-label" id="pw-label"></div>
+        </div>
+      </div>
+
+      <div class="reg-rules">
+        <div class="reg-rule"><div class="rule-ico" id="r1">✓</div><span>Al menos 8 caracteres</span></div>
+        <div class="reg-rule"><div class="rule-ico" id="r2">✓</div><span>Al menos una letra</span></div>
+        <div class="reg-rule"><div class="rule-ico" id="r3">✓</div><span>Al menos un número</span></div>
+      </div>
+
+      <button class="reg-submit" id="btn-step3" onclick="submitRegister()" disabled>Crear cuenta ✓</button>
+    </div>
+
+    <div class="reg-login">
+      ¿Ya tienes cuenta? <a onclick="startAppDirect()">Iniciar sesión</a>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM EMAIL -->
+<div id="confirm-screen" class="confirm-screen hidden">
+  <div class="splash-grid" style="position:fixed;"></div>
+  <div class="confirm-card">
+    <div class="confirm-icon">📧</div>
+    <h2 class="confirm-title">Revisa tu correo</h2>
+    <p class="confirm-sub">Enviamos un enlace de confirmación a:</p>
+    <div class="confirm-email-box" id="confirm-email-display"></div>
+    <p class="confirm-sub" style="margin-bottom:20px;">Toca el enlace del correo para activar tu cuenta. El proceso tarda menos de un minuto.</p>
+
+    <div class="confirm-steps">
+      <div class="confirm-step">
+        <div class="cs-num">1</div>
+        <div class="cs-text">Abre tu bandeja de entrada y busca un correo de <strong>noreply@guardamsg.bo</strong></div>
+      </div>
+      <div class="confirm-step">
+        <div class="cs-num">2</div>
+        <div class="cs-text">Toca el botón <strong>"Confirmar mi cuenta"</strong> dentro del correo</div>
+      </div>
+      <div class="confirm-step">
+        <div class="cs-num">3</div>
+        <div class="cs-text">Tu cuenta quedará <strong>activada inmediatamente</strong> y podrás iniciar sesión</div>
+      </div>
+    </div>
+
+    <button class="confirm-demo-btn" onclick="startAppFromReg()">Continuar a la app (demo) →</button>
+    <div class="confirm-resend">¿No recibiste el correo? <a onclick="resendEmail()">Reenviar enlace</a></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <svg width="28" height="28" viewBox="0 0 72 72" fill="none">
+        <rect width="72" height="72" rx="20" fill="#1E40AF"/>
+        <path d="M22 50 L36 22 L50 50 L43 43 L36 36 L29 43 Z" fill="white" opacity="0.95"/>
+        <circle cx="36" cy="53" r="4" fill="#10B981"/>
+      </svg>
+      <span class="sb-name">IDENTIFY AI</span>
+      <div class="sb-status" title="Sistema activo"></div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-avatar" id="sb-avatar">?</div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sb-user-name">Usuario</div>
+        <div class="sb-user-role">Cuenta activa</div>
+      </div>
+      <button class="sb-logout" onclick="logout()" title="Cerrar sesión">⏏</button>
+    </div>
+    <nav class="sb-nav">
+      <button class="nb active" data-tab="mensajes" onclick="switchTab(this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Mensajes <span class="nb-badge">2</span>
+      </button>
+      <button class="nb" data-tab="escaner" onclick="switchTab(this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Analizador IA
+      </button>
+      <button class="nb" data-tab="estadisticas" onclick="switchTab(this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Estadísticas
+      </button>
+      <button class="nb" data-tab="arquitectura" onclick="switchTab(this)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="7" height="7"/><rect x="15" y="3" width="7" height="7"/><rect x="9" y="14" width="7" height="7"/><line x1="5.5" y1="10" x2="9" y2="17.5"/><line x1="18.5" y1="10" x2="15" y2="17.5"/></svg>
+        Arquitectura
+      </button>
+    </nav>
+    <div class="sb-foot">
+      <div class="model-pill">
+        <div class="model-dot"></div>
+        <div>
+          <div class="model-name">Modelo BERT activo</div>
+          <div class="model-acc">Precisión: 94.7%</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="toast hidden" id="toast">
+      <span class="toast-ico">⚠</span>
+      <div><div class="toast-t">Fraude detectado</div><div class="toast-m" id="toast-msg"></div></div>
+      <button onclick="closeToast()">✕</button>
+    </div>
+
+    <!-- MENSAJES -->
+    <div id="tab-mensajes" class="panel active">
+      <div class="ph">
+        <div><h2 class="pt">Bandeja de mensajes</h2><p class="pd">Analizados automáticamente por la IA en tiempo real</p></div>
+        <button class="hbtn" onclick="simulateNew()">+ Simular mensaje</button>
+      </div>
+      <div class="filters" id="filters">
+        <button class="fb active" onclick="filterMsg('todos',this)">Todos <b>5</b></button>
+        <button class="fb" onclick="filterMsg('alto',this)">⚠ Alto riesgo <b class="red">2</b></button>
+        <button class="fb" onclick="filterMsg('medio',this)">◈ Medio <b class="yellow">1</b></button>
+        <button class="fb" onclick="filterMsg('bajo',this)">✓ Seguros <b class="green">2</b></button>
+      </div>
+      <div class="msg-grid" id="msg-grid"></div>
+      <div class="detail-ov hidden" id="detail-ov">
+        <div class="detail-card">
+          <button class="back" onclick="closeDetail()">← Volver a mensajes</button>
+          <div class="detail-top">
+            <div class="detail-avatar" id="d-avatar"></div>
+            <div><div class="d-from" id="d-from"></div><div class="d-meta"><span id="d-app"></span> · <span id="d-time"></span></div></div>
+            <div class="d-risk-pill" id="d-risk-pill"></div>
+          </div>
+          <div class="d-msg-box">
+            <div class="d-msg-label">Mensaje recibido</div>
+            <div class="d-msg-text" id="d-msg-text"></div>
+          </div>
+          <div class="d-analysis">
+            <div class="semaforo-block">
+              <div class="semaforo">
+                <div class="sl" id="sl-rojo"></div>
+                <div class="sl" id="sl-amarillo"></div>
+                <div class="sl" id="sl-verde"></div>
+              </div>
+              <div>
+                <div class="d-risk-big" id="d-risk-big"></div>
+                <div class="d-score" id="d-score"></div>
+                <div class="d-desc" id="d-desc"></div>
+              </div>
+            </div>
+            <div class="inds-block">
+              <div class="block-title">Indicadores del modelo NLP</div>
+              <div id="d-inds"></div>
+            </div>
+            <div class="kw-block">
+              <div class="block-title">Palabras clave detectadas</div>
+              <div class="kw-list" id="d-kw"></div>
+            </div>
+            <div class="d-actions">
+              <button class="abtn red-btn" onclick="alert('Mensaje reportado a la base de datos de fraudes.')">Reportar fraude</button>
+              <button class="abtn green-btn" onclick="alert('Marcado como seguro. El modelo aprenderá de esto.')">Marcar seguro</button>
+              <button class="abtn blue-btn" onclick="switchTabById('arquitectura')">Ver arquitectura</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALIZADOR -->
+    <div id="tab-escaner" class="panel hidden">
+      <div class="ph"><div><h2 class="pt">Analizador de mensajes</h2><p class="pd">Escribe o pega un mensaje y la IA lo clasifica en tiempo real</p></div></div>
+      <div class="scanner-wrap">
+        <div class="scanner-left">
+          <label class="field-label-app">Mensaje a analizar</label>
+          <textarea id="scan-input" class="scan-ta" placeholder="Ej: Hola mamá, soy tu hijo, tuve un accidente y cambié mi número. Necesito que me transfieras Bs. 500 urgente..."></textarea>
+          <div class="scan-opts">
+            <div><label class="field-label-app">Plataforma</label>
+              <select id="scan-plat" class="scan-sel"><option>WhatsApp</option><option>Messenger</option><option>Telegram</option><option>SMS</option></select>
+            </div>
+            <div><label class="field-label-app">Remitente</label>
+              <select id="scan-rem" class="scan-sel"><option>Número desconocido</option><option>Contacto guardado</option><option>Institución bancaria</option><option>Empresa / servicio</option></select>
+            </div>
+          </div>
+          <button class="scan-btn" onclick="runScan()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            Analizar con IA
+          </button>
+          <div class="examples-row">
+            <span class="ex-label">Probar ejemplo:</span>
+            <button class="ex-btn" onclick="loadEx(0)">Cuento del tío</button>
+            <button class="ex-btn" onclick="loadEx(1)">Phishing banco</button>
+            <button class="ex-btn" onclick="loadEx(2)">Mensaje normal</button>
+          </div>
+        </div>
+        <div class="scanner-right hidden" id="scan-result">
+          <div class="scan-res-header">
+            <div class="scan-res-title">Resultado del análisis</div>
+            <div class="pipeline" id="pipeline">
+              <div class="pipe-step" id="ps1">① Tokenización</div>
+              <div class="pipe-arr">→</div>
+              <div class="pipe-step" id="ps2">② Vectorización</div>
+              <div class="pipe-arr">→</div>
+              <div class="pipe-step" id="ps3">③ Clasificación</div>
+            </div>
+          </div>
+          <div id="scan-res-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS -->
+    <div id="tab-estadisticas" class="panel hidden">
+      <div class="ph"><div><h2 class="pt">Estadísticas del sistema</h2><p class="pd">Métricas de rendimiento del modelo IA en producción</p></div></div>
+      <div class="stats-top">
+        <div class="sc big"><div class="sc-num blue">47</div><div class="sc-label">Mensajes analizados hoy</div><div class="sc-trend">↑ +12 vs ayer</div></div>
+        <div class="sc"><div class="sc-num red">3</div><div class="sc-label">Alto riesgo</div></div>
+        <div class="sc"><div class="sc-num yellow">7</div><div class="sc-label">Riesgo medio</div></div>
+        <div class="sc"><div class="sc-num green">37</div><div class="sc-label">Sin riesgo</div></div>
+      </div>
+      <div class="charts-row">
+        <div class="cc"><h3 class="cc-title">Métricas del modelo BERT</h3><div id="metrics-bars"></div></div>
+        <div class="cc"><h3 class="cc-title">Indicadores de fraude más frecuentes</h3><div id="freq-bars"></div></div>
+      </div>
+      <div class="cc full"><h3 class="cc-title">Actividad semanal</h3><div class="weekly" id="weekly"></div></div>
+      <div class="cc full" style="margin-top:16px;">
+        <h3 class="cc-title">Stack tecnológico</h3>
+        <div class="tech-grid">
+          <div class="tech"><span class="tb py">Python</span><small>Backend IA</small></div>
+          <div class="tech"><span class="tb bert">BERT/NLP</span><small>Modelo NLP</small></div>
+          <div class="tech"><span class="tb tf">TF Lite</span><small>Móvil</small></div>
+          <div class="tech"><span class="tb and">Android</span><small>App</small></div>
+          <div class="tech"><span class="tb api">FastAPI</span><small>API REST</small></div>
+          <div class="tech"><span class="tb pg">PostgreSQL</span><small>Base de datos</small></div>
+          <div class="tech"><span class="tb git">Git/Scrum</span><small>Metodología</small></div>
+          <div class="tech"><span class="tb sk">Scikit-learn</span><small>ML clásico</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARQUITECTURA -->
+    <div id="tab-arquitectura" class="panel hidden">
+      <div class="ph"><div><h2 class="pt">Arquitectura del sistema</h2><p class="pd">Haz clic en cada módulo para ver sus detalles</p></div></div>
+      <div class="arch-wrap">
+        <div class="arch-modules" id="arch-modules"></div>
+        <div class="arch-detail hidden" id="arch-detail">
+          <div class="ad-header">
+            <div class="ad-icon" id="ad-icon"></div>
+            <div><div class="ad-title" id="ad-title"></div><div class="ad-sub" id="ad-sub"></div></div>
+            <button class="ad-close" onclick="closeArchDetail()">✕</button>
+          </div>
+          <div class="ad-body" id="ad-body"></div>
+          <div class="ad-tech" id="ad-tech"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ===== DATA =====
+const MENSAJES = [
+  {id:1,from:"+591 78945123",app:"WhatsApp",time:"Hace 5 min",preview:"Hola mamá soy tu hijo, tuve un accidente y cambié mi número...",texto:"Hola mamá, soy tu hijo. Tuve un accidente y estoy en el hospital, cambié mi número porque me robaron el teléfono. Necesito que me transfieras Bs. 500 urgente al QR de este número. No llames todavía porque estoy en sala de espera. Por favor es urgente.",riesgo:"alto",score:96.4,desc:"El mensaje presenta múltiples patrones del 'cuento del tío digital', uno de los fraudes más frecuentes en Bolivia. Alta probabilidad de suplantación de identidad.",indicators:[{name:"Lenguaje de urgencia",pct:95,tipo:"danger"},{name:"Número desconocido",pct:90,tipo:"danger"},{name:"Solicitud de dinero",pct:100,tipo:"danger"},{name:"Cambio de número",pct:88,tipo:"danger"},{name:"Bloqueo de llamada",pct:75,tipo:"danger"}],keywords:[{word:"urgente",tipo:"danger"},{word:"accidente",tipo:"danger"},{word:"transferir",tipo:"danger"},{word:"cambié mi número",tipo:"danger"},{word:"hospital",tipo:"warn"},{word:"no llames",tipo:"danger"}],avatarColor:"#EF4444",avatarBg:"rgba(239,68,68,.15)",avatarLetter:"?"},
+  {id:2,from:"Banco Nacional (bot)",app:"Facebook Messenger",time:"Hace 23 min",preview:"Su cuenta ha sido bloqueada por actividad sospechosa. Verifique...",texto:"AVISO URGENTE: Su cuenta bancaria ha sido bloqueada por actividad sospechosa. Para evitar la suspensión definitiva, verifique su identidad en el siguiente enlace: bit.ly/banco-verif-bl2025. Tiene 2 horas para responder.",riesgo:"alto",score:91.8,desc:"Phishing bancario clásico. El mensaje utiliza urgencia artificial, un enlace acortado sospechoso y suplanta la identidad de una institución financiera.",indicators:[{name:"Enlace sospechoso",pct:92,tipo:"danger"},{name:"Urgencia artificial",pct:87,tipo:"danger"},{name:"Suplantación bancaria",pct:84,tipo:"danger"},{name:"Límite de tiempo",pct:80,tipo:"danger"},{name:"Canal no oficial",pct:95,tipo:"danger"}],keywords:[{word:"URGENTE",tipo:"danger"},{word:"bloqueada",tipo:"danger"},{word:"bit.ly",tipo:"danger"},{word:"2 horas",tipo:"danger"},{word:"suspensión",tipo:"warn"},{word:"verifique",tipo:"warn"}],avatarColor:"#F59E0B",avatarBg:"rgba(245,158,11,.15)",avatarLetter:"B"},
+  {id:3,from:"María García",app:"WhatsApp",time:"Hace 1 hora",preview:"¿Podés prestarme algo hasta el lunes que cobro?",texto:"Hola! Oye, estoy un poco corta esta semana con los gastos. ¿Me podés prestar 200 bs hasta el lunes que cobro? Te devuelvo con una cerveza jajaja. Igual sin urgencia si no podés.",riesgo:"medio",score:48.2,desc:"Mensaje de un contacto conocido con solicitud económica. El modelo detecta riesgo medio. Se recomienda verificar por llamada antes de realizar cualquier transferencia.",indicators:[{name:"Solicitud de dinero",pct:65,tipo:"warn"},{name:"Contacto guardado",pct:10,tipo:"ok"},{name:"Tono informal",pct:8,tipo:"ok"},{name:"Sin urgencia extrema",pct:12,tipo:"ok"},{name:"Monto razonable",pct:20,tipo:"warn"}],keywords:[{word:"prestar",tipo:"warn"},{word:"200 bs",tipo:"warn"},{word:"lunes",tipo:"ok"},{word:"jajaja",tipo:"ok"}],avatarColor:"#3B82F6",avatarBg:"rgba(59,130,246,.15)",avatarLetter:"M"},
+  {id:4,from:"Mamá ❤",app:"WhatsApp",time:"Hace 2 horas",preview:"¿A qué hora llegás hoy para el almuerzo?",texto:"Hijito, ¿a qué hora llegás hoy? Hice silpancho. Avísame para esperarte. También tu papá quiere hablar contigo sobre el fin de semana.",riesgo:"bajo",score:3.1,desc:"Mensaje de comunicación familiar cotidiana. No se detectaron indicadores de fraude.",indicators:[{name:"Sin solicitud de dinero",pct:2,tipo:"ok"},{name:"Contacto guardado",pct:1,tipo:"ok"},{name:"Contenido cotidiano",pct:2,tipo:"ok"},{name:"Sin urgencia",pct:1,tipo:"ok"},{name:"Contexto familiar",pct:2,tipo:"ok"}],keywords:[{word:"almuerzo",tipo:"ok"},{word:"silpancho",tipo:"ok"},{word:"papá",tipo:"ok"},{word:"fin de semana",tipo:"ok"}],avatarColor:"#10B981",avatarBg:"rgba(16,185,129,.15)",avatarLetter:"M"},
+  {id:5,from:"Lucas Torrez",app:"WhatsApp",time:"Hace 3 horas",preview:"¿Vamos al partido el sábado? Hay entradas a Bs 30",texto:"Oe, ¿vamos al partido el sábado? Hay entradas en el estadio a Bs. 30. Avisame para ir juntos. Sale a las 3 pm.",riesgo:"bajo",score:4.7,desc:"Mensaje de coordinación social entre amigos. Sin patrones de fraude detectados.",indicators:[{name:"Sin solicitud directa",pct:5,tipo:"ok"},{name:"Contacto conocido",pct:3,tipo:"ok"},{name:"Contexto de actividad",pct:2,tipo:"ok"},{name:"Precio público informado",pct:4,tipo:"ok"}],keywords:[{word:"partido",tipo:"ok"},{word:"sábado",tipo:"ok"},{word:"entradas",tipo:"ok"},{word:"estadio",tipo:"ok"}],avatarColor:"#7C3AED",avatarBg:"rgba(124,58,237,.15)",avatarLetter:"L"}
+];
+const MSGS_EXTRA = [{id:99,from:"+591 77123456",app:"WhatsApp",time:"Ahora",preview:"Ganaste un premio de Bs 5000. Haz clic para reclamar...",texto:"¡Felicitaciones! Eres el ganador de nuestro sorteo de Bs 5000. Para reclamar tu premio haz clic en: premio-sorteo.com/claim?id=47821. Tienes 24 horas.",riesgo:"alto",score:98.1,desc:"Fraude de sorteo falso. Técnica de ingeniería social con premio ficticio y enlace malicioso.",indicators:[{name:"Premio falso",pct:98,tipo:"danger"},{name:"Enlace sospechoso",pct:95,tipo:"danger"},{name:"Límite de tiempo",pct:85,tipo:"danger"},{name:"Número desconocido",pct:92,tipo:"danger"}],keywords:[{word:"felicitaciones",tipo:"warn"},{word:"ganaste",tipo:"danger"},{word:"Bs 5000",tipo:"danger"},{word:"premio-sorteo.com",tipo:"danger"},{word:"24 horas",tipo:"danger"}],avatarColor:"#EF4444",avatarBg:"rgba(239,68,68,.15)",avatarLetter:"?"}];
+const EJEMPLOS = [
+  {texto:"Hola soy tu hijo, tuve un accidente y cambié mi número. Necesito que me transfieras Bs 500 urgente al QR de este número. No llames.",plat:"WhatsApp",rem:"Número desconocido"},
+  {texto:"ALERTA: Su cuenta ha sido suspendida por actividad inusual. Haga clic en bit.ly/verifica-ahora para restablecer el acceso en menos de 1 hora.",plat:"Facebook Messenger",rem:"Institución bancaria"},
+  {texto:"Hola! ¿Cómo estás? Ya llegué a casa sano y salvo. Mañana nos vemos en la oficina a las 9. Gracias por todo!",plat:"WhatsApp",rem:"Contacto guardado"}
+];
+const ARQUITECTURA = [
+  {id:"capture",name:"Módulo de captura",short:"Captura de notificaciones Android",icon:"📡",iconBg:"rgba(59,130,246,.15)",color:"#3B82F6",body:"Este módulo utiliza el servicio NotificationListenerService de Android para capturar los mensajes recibidos en aplicaciones de mensajería como WhatsApp y Facebook Messenger. Debido a que estas apps cifran sus mensajes, el sistema accede únicamente al contenido de la notificación que se muestra al usuario.",tech:["Android Service","NotificationListenerService","Kotlin","Permisos BIND_NOTIFICATION_LISTENER"]},
+  {id:"nlp",name:"Módulo NLP",short:"Preprocesamiento de texto",icon:"🔤",iconBg:"rgba(124,58,237,.15)",color:"#7C3AED",body:"Recibe el texto crudo del mensaje y aplica técnicas de NLP: tokenización, normalización, detección de palabras clave sospechosas y vectorización mediante embeddings para representar el texto como vector numérico comprensible por el modelo.",tech:["NLTK","spaCy","Tokenización","TF-IDF","Word Embeddings","Python"]},
+  {id:"model",name:"Modelo IA",short:"Clasificación BERT / ML",icon:"🧠",iconBg:"rgba(16,185,129,.15)",color:"#10B981",body:"El núcleo del sistema. Se evalúan tres modelos: Naive Bayes, SVM y BERT. El modelo final se convierte a TensorFlow Lite para ejecutarse directamente en el dispositivo sin necesidad de internet.",tech:["BERT","Naive Bayes","SVM","Scikit-learn","TensorFlow","TF Lite"]},
+  {id:"classify",name:"Módulo de clasificación",short:"Semáforo de riesgo",icon:"🚦",iconBg:"rgba(239,68,68,.15)",color:"#EF4444",body:"Toma la predicción del modelo y la convierte en uno de tres niveles: Alto (≥0.75) rojo, Medio (0.40–0.74) amarillo, Bajo (<0.40) verde.",tech:["Umbral de decisión","Clasificación multiclase","Score de confianza"]},
+  {id:"alert",name:"Módulo de alertas",short:"Notificación al usuario",icon:"🔔",iconBg:"rgba(245,158,11,.15)",color:"#F59E0B",body:"Cuando se detecta riesgo alto o medio, el sistema genera una notificación con el nivel de riesgo, indicadores detectados y opciones de acción para retroalimentar el modelo.",tech:["Android Notifications API","UI/UX","Feedback loop","Base de datos local"]},
+  {id:"backend",name:"Backend / API",short:"Gestión y almacenamiento",icon:"⚙️",iconBg:"rgba(59,130,246,.1)",color:"#3B82F6",body:"API REST con FastAPI que gestiona el almacenamiento de mensajes reportados, actualiza el modelo con nuevos datos y expone métricas del sistema.",tech:["FastAPI","Python","PostgreSQL","REST API","JWT Auth","Docker"]}
+];
+const METRICS=[{name:"Precisión",val:94.7,cls:"mb-blue"},{name:"Recall",val:96.0,cls:"mb-green"},{name:"F1-Score",val:93.0,cls:"mb-purple"},{name:"Falsos positivos",val:5.3,cls:"mb-red"}];
+const FREQ=[{name:"Solicitud de dinero",pct:84},{name:"Lenguaje de urgencia",pct:91},{name:"Número desconocido",pct:73},{name:"Enlace sospechoso",pct:61},{name:"Cambio de número",pct:55},{name:"Límite de tiempo",pct:48}];
+const WEEKLY=[{day:"Lun",val:28},{day:"Mar",val:35},{day:"Mié",val:22},{day:"Jue",val:41},{day:"Vie",val:53},{day:"Sáb",val:38},{day:"Hoy",val:47}];
+
+// ===== REGISTRATION STATE =====
+let regData = { nombre: '', email: '', pass: '' };
+let currentFilter = 'todos';
+let allMessages = [...MENSAJES];
+
+// ===== SPLASH =====
+function showRegister() {
+  const splash = document.getElementById('splash');
+  splash.style.opacity = '0';
+  splash.style.transition = 'opacity .4s';
+  setTimeout(() => {
+    splash.style.display = 'none';
+    document.getElementById('reg-screen').classList.remove('hidden');
+  }, 400);
+}
+
+function backToSplash() {
+  document.getElementById('reg-screen').classList.add('hidden');
+  const splash = document.getElementById('splash');
+  splash.style.display = '';
+  splash.style.opacity = '0';
+  setTimeout(() => { splash.style.opacity = '1'; }, 10);
+}
+
+function startAppDirect() {
+  hideSplashAll();
+  launchApp('Demo', 'D');
+}
+
+function hideSplashAll() {
+  ['splash','reg-screen','confirm-screen'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity='0'; el.style.transition='opacity .4s'; setTimeout(()=>el.classList.add('hidden'),400); }
+  });
+}
+
+// ===== STEP 1: NOMBRE =====
+function validateNombre() {
+  const val = document.getElementById('reg-nombre').value.trim();
+  const hint = document.getElementById('hint-nombre');
+  const inp = document.getElementById('reg-nombre');
+  const btn = document.getElementById('btn-step1');
+  if (val.length < 3) {
+    inp.className = 'field-input'; hint.className = 'field-hint'; hint.textContent = 'Ingresa tu nombre y apellido(s)'; btn.disabled = true;
+  } else if (!/\s/.test(val)) {
+    inp.className = 'field-input'; hint.className = 'field-hint err'; hint.textContent = 'Ingresa al menos nombre y un apellido'; btn.disabled = true;
+  } else {
+    inp.className = 'field-input valid'; hint.className = 'field-hint ok'; hint.textContent = '✓ Nombre válido'; btn.disabled = false;
+  }
+}
+
+function goStep2() {
+  regData.nombre = document.getElementById('reg-nombre').value.trim();
+  document.getElementById('reg-step1').classList.add('hidden');
+  document.getElementById('reg-step2').classList.remove('hidden');
+  document.getElementById('step1').className = 'step-dot done';
+  document.getElementById('step1').textContent = '✓';
+  document.getElementById('step2').className = 'step-dot active';
+  document.getElementById('line1').className = 'step-line done';
+  document.getElementById('reg-email').focus();
+}
+
+// ===== STEP 2: EMAIL =====
+function validateEmail() {
+  const val = document.getElementById('reg-email').value.trim();
+  const hint = document.getElementById('hint-email');
+  const inp = document.getElementById('reg-email');
+  const btn = document.getElementById('btn-step2');
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!val) {
+    inp.className = 'field-input'; hint.className = 'field-hint'; hint.textContent = 'Será tu nombre de usuario para iniciar sesión'; btn.disabled = true;
+  } else if (!emailRe.test(val)) {
+    inp.className = 'field-input error'; hint.className = 'field-hint err'; hint.textContent = 'Dirección de correo no válida'; btn.disabled = true;
+  } else {
+    inp.className = 'field-input valid'; hint.className = 'field-hint ok'; hint.textContent = '✓ Correo válido'; btn.disabled = false;
+  }
+}
+
+function goStep3() {
+  regData.email = document.getElementById('reg-email').value.trim();
+  document.getElementById('reg-step2').classList.add('hidden');
+  document.getElementById('reg-step3').classList.remove('hidden');
+  document.getElementById('step2').className = 'step-dot done';
+  document.getElementById('step2').textContent = '✓';
+  document.getElementById('step3').className = 'step-dot active';
+  document.getElementById('line2').className = 'step-line done';
+  document.getElementById('reg-pass').focus();
+}
+
+// ===== STEP 3: CONTRASEÑA =====
+function validatePass() {
+  const val = document.getElementById('reg-pass').value;
+  const btn = document.getElementById('btn-step3');
+  const strengthEl = document.getElementById('pw-strength');
+  strengthEl.style.display = val ? 'block' : 'none';
+  const has8 = val.length >= 8;
+  const hasLetter = /[a-zA-Z]/.test(val);
+  const hasNum = /[0-9]/.test(val);
+  setRule('r1', has8); setRule('r2', hasLetter); setRule('r3', hasNum);
+  const score = (has8 ? 1 : 0) + (hasLetter ? 1 : 0) + (hasNum ? 1 : 0);
+  const bars = ['pb1','pb2','pb3'];
+  const cls = score === 1 ? 's1' : score === 2 ? 's2' : 's3';
+  bars.forEach((b,i) => { document.getElementById(b).className = 'pw-bar ' + (i < score ? cls : ''); });
+  document.getElementById('pw-label').textContent = score === 1 ? 'Débil' : score === 2 ? 'Moderada' : score === 3 ? 'Fuerte' : '';
+  btn.disabled = !(has8 && hasLetter && hasNum);
+}
+
+function setRule(id, pass) {
+  const el = document.getElementById(id);
+  el.className = 'rule-ico' + (pass ? ' pass' : '');
+  el.textContent = '✓';
+}
+
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+function submitRegister() {
+  regData.pass = document.getElementById('reg-pass').value;
+  document.getElementById('reg-screen').classList.add('hidden');
+  document.getElementById('confirm-email-display').textContent = regData.email;
+  document.getElementById('confirm-screen').classList.remove('hidden');
+}
+
+// ===== CONFIRM SCREEN =====
+function startAppFromReg() {
+  document.getElementById('confirm-screen').classList.add('hidden');
+  const initials = regData.nombre.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  launchApp(regData.nombre.split(' ')[0], initials);
+}
+
+function resendEmail() {
+  const btn = event.target;
+  btn.textContent = 'Enviando...';
+  setTimeout(() => { btn.textContent = 'Reenviado ✓'; setTimeout(()=>{ btn.textContent = 'Reenviar enlace'; },3000); }, 1200);
+}
+
+// ===== LAUNCH APP =====
+function launchApp(name, initials) {
+  document.getElementById('sb-user-name').textContent = name;
+  document.getElementById('sb-avatar').textContent = initials || name[0].toUpperCase();
+  document.getElementById('app').classList.remove('hidden');
+  renderMessages();
+  renderStats();
+  renderArchitecture();
+  setTimeout(showToast, 1200);
+}
+
+function logout() {
+  document.getElementById('app').classList.add('hidden');
+  const splash = document.getElementById('splash');
+  splash.style.display = '';
+  splash.style.opacity = '0';
+  setTimeout(() => { splash.style.opacity = '1'; }, 10);
+  regData = { nombre: '', email: '', pass: '' };
+  // reset reg form
+  ['reg-step2','reg-step3'].forEach(s => document.getElementById(s).classList.add('hidden'));
+  document.getElementById('reg-step1').classList.remove('hidden');
+  ['step1','step2','step3'].forEach((s,i) => {
+    const el = document.getElementById(s);
+    el.className = 'step-dot ' + (i===0?'active':'idle');
+    el.textContent = i+1;
+  });
+  document.getElementById('line1').className = 'step-line';
+  document.getElementById('line2').className = 'step-line';
+  document.getElementById('reg-nombre').value='';
+  document.getElementById('reg-email').value='';
+  document.getElementById('reg-pass').value='';
+  ['hint-nombre','hint-email'].forEach(h => {
+    const el = document.getElementById(h);
+    el.className='field-hint';
+  });
+  document.getElementById('hint-nombre').textContent='Ingresa tu nombre y apellido(s)';
+  document.getElementById('hint-email').textContent='Será tu nombre de usuario para iniciar sesión';
+  ['reg-nombre','reg-email','reg-pass'].forEach(i => document.getElementById(i).className='field-input');
+  document.getElementById('btn-step1').disabled=true;
+  document.getElementById('btn-step2').disabled=true;
+  document.getElementById('pw-strength').style.display='none';
+}
+
+// ===== TABS =====
+function switchTab(btn) {
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  switchTabById(btn.dataset.tab);
+}
+function switchTabById(tabId) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('tab-' + tabId).classList.remove('hidden');
+  document.querySelectorAll('.nb').forEach(b => {
+    if (b.dataset.tab === tabId) b.classList.add('active'); else b.classList.remove('active');
+  });
+}
+
+// ===== TOAST =====
+function showToast() {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = 'Mensaje de "+591 78945123" analizado. Posible cuento del tío.';
+  t.classList.remove('hidden');
+  setTimeout(closeToast, 5000);
+}
+function closeToast() { document.getElementById('toast').classList.add('hidden'); }
+
+// ===== MESSAGES =====
+function renderMessages() {
+  const grid = document.getElementById('msg-grid');
+  grid.innerHTML = '';
+  const filtered = currentFilter === 'todos' ? allMessages : allMessages.filter(m => m.riesgo === currentFilter);
+  filtered.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'msg-card';
+    card.innerHTML = `<div class="mc-top"><div class="mc-from">${m.from}</div><div class="mc-time">${m.time}</div></div><div class="mc-preview">${m.preview}</div><div class="mc-footer"><span class="risk-pill rp-${m.riesgo}"><span class="rp-dot dot-${m.riesgo}"></span>${riskLabel(m.riesgo)}</span><span class="mc-app">${m.app}</span></div>`;
+    card.onclick = () => openDetail(m);
+    grid.appendChild(card);
+  });
+}
+
+function filterMsg(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMessages();
+}
+
+function riskLabel(r) { return r==='alto'?'⚠ Alto riesgo':r==='medio'?'◈ Riesgo medio':'✓ Seguro'; }
+function riskColor(r) { return r==='alto'?'#EF4444':r==='medio'?'#F59E0B':'#10B981'; }
+
+function openDetail(m) {
+  const ov = document.getElementById('detail-ov');
+  ov.classList.remove('hidden');
+  document.getElementById('d-from').textContent = m.from;
+  document.getElementById('d-app').textContent = m.app;
+  document.getElementById('d-time').textContent = m.time;
+  document.getElementById('d-msg-text').textContent = '"' + m.texto + '"';
+  const av = document.getElementById('d-avatar');
+  av.textContent = m.avatarLetter; av.style.background = m.avatarBg; av.style.color = m.avatarColor;
+  document.getElementById('d-risk-pill').innerHTML = `<span class="risk-pill rp-${m.riesgo}"><span class="rp-dot dot-${m.riesgo}"></span>${riskLabel(m.riesgo)}</span>`;
+  document.getElementById('sl-rojo').classList.toggle('on', m.riesgo==='alto');
+  document.getElementById('sl-amarillo').classList.toggle('on', m.riesgo==='medio');
+  document.getElementById('sl-verde').classList.toggle('on', m.riesgo==='bajo');
+  const rb = document.getElementById('d-risk-big');
+  rb.textContent = riskLabel(m.riesgo); rb.style.color = riskColor(m.riesgo);
+  document.getElementById('d-score').textContent = `Score del modelo: ${m.score}%`;
+  document.getElementById('d-desc').textContent = m.desc;
+  document.getElementById('d-inds').innerHTML = m.indicators.map(ind => `<div class="ind-row"><div class="ind-name">${ind.name}</div><div class="ind-bar-bg"><div class="ind-bar ib-${ind.tipo}" style="width:${ind.pct}%"></div></div><div class="ind-pct">${ind.pct}%</div></div>`).join('');
+  document.getElementById('d-kw').innerHTML = m.keywords.map(k => `<span class="kw kw-${k.tipo}">${k.word}</span>`).join('');
+}
+function closeDetail() { document.getElementById('detail-ov').classList.add('hidden'); }
+
+function simulateNew() {
+  const extra = MSGS_EXTRA[0];
+  if (!allMessages.find(m => m.id === extra.id)) allMessages.unshift(extra);
+  renderMessages();
+  document.getElementById('toast-msg').textContent = 'Nuevo mensaje sospechoso: posible fraude de sorteo.';
+  document.getElementById('toast').classList.remove('hidden');
+  setTimeout(closeToast, 5000);
+}
+
+// ===== SCANNER =====
+function loadEx(i) {
+  const ex = EJEMPLOS[i];
+  document.getElementById('scan-input').value = ex.texto;
+  for (let o of document.getElementById('scan-plat').options) if (o.text===ex.plat){o.selected=true;break;}
+  for (let o of document.getElementById('scan-rem').options) if (o.text===ex.rem){o.selected=true;break;}
+}
+
+function runScan() {
+  const texto = document.getElementById('scan-input').value.trim();
+  if (!texto) { alert('Por favor ingresa un mensaje para analizar.'); return; }
+  const result = document.getElementById('scan-result');
+  const body = document.getElementById('scan-res-body');
+  const plat = document.getElementById('scan-plat').value;
+  const rem = document.getElementById('scan-rem').value;
+  result.classList.remove('hidden');
+  body.innerHTML = '<div class="loading-pulse" style="color:var(--text3);font-size:13px;padding:20px 0;">Procesando con el modelo BERT...</div>';
+  ['ps1','ps2','ps3'].forEach(id => document.getElementById(id).classList.remove('done'));
+  setTimeout(() => document.getElementById('ps1').classList.add('done'), 400);
+  setTimeout(() => document.getElementById('ps2').classList.add('done'), 900);
+  setTimeout(() => document.getElementById('ps3').classList.add('done'), 1500);
+  setTimeout(() => {
+    const score = calcScore(texto, rem);
+    const riesgo = score >= 75 ? 'alto' : score >= 40 ? 'medio' : 'bajo';
+    const keywords = extractKeywords(texto);
+    body.innerHTML = `<div style="display:flex;align-items:center;gap:16px;background:var(--bg);border-radius:10px;padding:14px;margin-bottom:14px;"><div class="semaforo"><div class="sl ${riesgo==='alto'?'on':''}" id="sr1" style="width:20px;height:20px;"></div><div class="sl ${riesgo==='medio'?'on':''}" id="sr2" style="width:20px;height:20px;"></div><div class="sl ${riesgo==='bajo'?'on':''}" id="sr3" style="width:20px;height:20px;"></div></div><div><div style="font-size:18px;font-weight:600;color:${riskColor(riesgo)};margin-bottom:3px;">${riskLabel(riesgo)}</div><div style="font-size:11px;color:var(--text3);font-family:var(--mono);">Score: ${score.toFixed(1)}% · ${plat} · ${rem}</div></div></div><div style="margin-bottom:12px;"><div class="block-title">Palabras clave detectadas</div><div class="kw-list" style="margin-top:8px;">${keywords.map(k=>`<span class="kw kw-${k.tipo}">${k.word}</span>`).join('')}</div></div><div style="font-size:12px;color:var(--text2);line-height:1.6;background:var(--bg);border-radius:8px;padding:12px;">${getAnalysisText(riesgo,rem)}</div>`;
+    // Fix semaphore colors for inline ones
+    if(riesgo==='alto'){const s=document.getElementById('sr1');if(s){s.style.background='var(--red)';s.style.boxShadow='0 0 8px var(--red)';}}
+    if(riesgo==='medio'){const s=document.getElementById('sr2');if(s){s.style.background='var(--yellow)';s.style.boxShadow='0 0 8px var(--yellow)';}}
+    if(riesgo==='bajo'){const s=document.getElementById('sr3');if(s){s.style.background='var(--green)';s.style.boxShadow='0 0 8px var(--green)';}}
+  }, 1600);
+}
+
+function calcScore(texto, rem) {
+  const t = texto.toLowerCase(); let score = 10;
+  const danger = ['urgente','urgencia','accidente','transferir','transferencia','qr','número nuevo','cambie mi','hospital','policía','detenido','prestame','mándame','enviame','ganaste','premio','suspendida','bloqueada','bit.ly','clic','enlace','verificar'];
+  danger.forEach(w => { if(t.includes(w)) score += 15; });
+  if(['número desconocido','institución bancaria'].includes(rem.toLowerCase())) score += 20;
+  if(t.includes('?') && t.length < 80) score -= 15;
+  return Math.min(99, Math.max(2, score));
+}
+
+function extractKeywords(texto) {
+  const t = texto.toLowerCase();
+  const dangerWords = ['urgente','urgencia','accidente','transferir','transferencia','bloquead','suspendid','ganaste','premio','bit.ly','clic','clave','contraseña'];
+  const warnWords = ['hospital','policía','dinero','prestame','número nuevo','cambie'];
+  const keywords = [];
+  texto.split(/\s+/).forEach(word => {
+    const clean = word.replace(/[.,!?¿¡]/g,'').toLowerCase();
+    if(dangerWords.some(d => clean.includes(d))) keywords.push({word:word.replace(/[.,!?¿¡]/g,''),tipo:'danger'});
+    else if(warnWords.some(w => clean.includes(w))) keywords.push({word:word.replace(/[.,!?¿¡]/g,''),tipo:'warn'});
+  });
+  return keywords.slice(0,8);
+}
+
+function getAnalysisText(riesgo, rem) {
+  if(riesgo==='alto') return '⚠ El modelo clasificó este mensaje como de <strong>alto riesgo</strong>. Presenta múltiples indicadores de fraude. Se recomienda NO realizar ninguna transferencia.';
+  if(riesgo==='medio') return '◈ El modelo detectó algunos indicadores de riesgo. Se recomienda <strong>precaución</strong>. Verifica la identidad del remitente antes de actuar.';
+  return '✓ El mensaje no presenta indicadores significativos de fraude. El contenido parece <strong>legítimo</strong>.';
+}
+
+// ===== STATS =====
+function renderStats() {
+  const mb = document.getElementById('metrics-bars');
+  if(mb) mb.innerHTML = METRICS.map(m => `<div class="mbar-row"><div class="mbar-name">${m.name}</div><div class="mbar-bg"><div class="mbar ${m.cls}" style="width:${m.val}%"></div></div><div class="mbar-val">${m.val}%</div></div>`).join('');
+  const fb = document.getElementById('freq-bars');
+  if(fb) fb.innerHTML = FREQ.map(f => `<div class="mbar-row"><div class="mbar-name" style="width:160px;">${f.name}</div><div class="mbar-bg"><div class="mbar mb-purple" style="width:${f.pct}%"></div></div><div class="mbar-val">${f.pct}%</div></div>`).join('');
+  const wc = document.getElementById('weekly');
+  if(wc) { const max = Math.max(...WEEKLY.map(w=>w.val)); wc.innerHTML = WEEKLY.map(w => `<div class="wbar-wrap"><div class="wbar" style="height:${(w.val/max)*80}px;" title="${w.val} mensajes"></div><div class="wbar-label">${w.day}</div></div>`).join(''); }
+}
+
+// ===== ARCHITECTURE =====
+function renderArchitecture() {
+  const container = document.getElementById('arch-modules');
+  if(!container) return;
+  container.innerHTML = '';
+  ARQUITECTURA.forEach((mod, i) => {
+    const div = document.createElement('div');
+    div.className = 'arch-mod'; div.id = 'am-' + mod.id;
+    div.style.borderLeftColor = mod.color;
+    div.innerHTML = `<div class="am-icon" style="background:${mod.iconBg};">${mod.icon}</div><div><div class="am-name">${mod.name}</div><div class="am-desc">${mod.short}</div></div><div class="am-arrow">→</div>`;
+    div.onclick = () => openArchDetail(mod);
+    container.appendChild(div);
+    if(i < ARQUITECTURA.length-1) { const conn = document.createElement('div'); conn.className='arch-connector'; conn.textContent='↓'; container.appendChild(conn); }
+  });
+}
+
+function openArchDetail(mod) {
+  document.querySelectorAll('.arch-mod').forEach(m => m.classList.remove('selected'));
+  document.getElementById('am-'+mod.id).classList.add('selected');
+  const detail = document.getElementById('arch-detail');
+  detail.classList.remove('hidden');
+  document.getElementById('ad-icon').textContent = mod.icon;
+  document.getElementById('ad-icon').style.background = mod.iconBg;
+  document.getElementById('ad-title').textContent = mod.name;
+  document.getElementById('ad-sub').textContent = mod.short;
+  document.getElementById('ad-body').textContent = mod.body;
+  document.getElementById('ad-tech').innerHTML = mod.tech.map(t => `<span class="ad-tech-tag">${t}</span>`).join('');
+}
+
+function closeArchDetail() {
+  document.getElementById('arch-detail').classList.add('hidden');
+  document.querySelectorAll('.arch-mod').forEach(m => m.classList.remove('selected'));
+}
+
+document.addEventListener('click', function(e) {
+  if(e.target === document.getElementById('detail-ov')) closeDetail();
+});
+</script>
+</body>
+</html>
