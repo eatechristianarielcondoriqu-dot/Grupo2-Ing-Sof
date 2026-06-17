@@ -101,7 +101,7 @@ Commits organizados en formato convencional:
 ```
 
 #### 📝 Más Información
-👉 **Ver [README.md completo](https://github.com/TU_USUARIO/ue-los-andes/blob/main/README.md)** con:
+👉 **Ver [README.md completo](https://github.com/eatechristianarielcondoriqu-dot/Grupo2-Ing-Sof/blob/main/ue-los-andes/README.md)** con:
 - Requisitos previos
 - Estructura del proyecto
 - Instrucciones de BD (Neon)
