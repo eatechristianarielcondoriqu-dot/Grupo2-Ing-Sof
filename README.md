@@ -16,7 +16,7 @@ Tengo **2 proyectos principales** disponibles en mi repositorio. Cada uno tiene 
 Sistema web de demostración para detección de fraudes en mensajería usando inteligencia artificial. Interfaz educativa completamente funcional que simula análisis de riesgo, procesamiento NLP y arquitectura de sistema en tiempo real.
 
 #### 🔗 Enlaces del Proyecto
-- **Repositorio GitHub:** [`Grupo2-Ing-Sof/identify.ai`](https://github.com/eatechristianrielcondoriqu-dot/Grupo2-Ing-Sof/identify.ai)
+- **Repositorio GitHub:** [`Grupo2-Ing-Sof/identify.ai`](https://github.com/eatechristianarielcondoriqu-dot/Grupo2-Ing-Sof/tree/main/identify.ai)
 - **Sitio en Vivo:** [https://identify-ai-pi.vercel.app/](https://identify-ai-pi.vercel.app/)
 
 #### ✨ Funcionalidades Principales
